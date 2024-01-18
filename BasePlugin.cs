@@ -35,17 +35,17 @@ namespace CharacterSync;
 [Obfuscation(Exclude = true, ApplyToMembers = true)]
 public class BasePlugin : TemplatePlugin, ICompiledPlugin
 {
-    private static readonly string NameValue = "CharacterSync";
+    internal static readonly string NameValue = "CharacterSync";
 
     private static Location lastLocation;
 
-    private static readonly LLogger Log = new(NameValue, Colors.Cyan);
-    protected override Color LogColor { get; } = Colors.MediumPurple;
+    internal static readonly LLogger Log = new(NameValue, Colors.Cyan);
+    protected override Color LogColor { get; } = Colors.Cyan;
 
     private static readonly bool isSafeMode = false;
 
     private static readonly Regex SaveFolderRegex = new(
-                                                 @"(?<path>.*)FFXIV_CHR(?<cid>.*)\/(?!ITEMODR\.DAT|ITEMFDR\.DAT|GEARSET\.DAT|UISAVE\.DAT|.*\.log)(?<dat>.*)",
+                                                 @"(?!ITEMODR\.DAT|ITEMFDR\.DAT|GEARSET\.DAT|UISAVE\.DAT|.*\.log)(?<dat>.*)",
                                                  RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     protected override Type SettingsForm { get; } = typeof(Form1);
@@ -56,15 +56,25 @@ public class BasePlugin : TemplatePlugin, ICompiledPlugin
 
     public override void OnEnabled()
     {
-        TreeRoot.OnStart += OnBotStart;
-        TreeRoot.OnStop += OnBotStop;
+        var plugin = PluginManager.Plugins.FirstOrDefault(x => x.Plugin.Name == NameValue)?.Plugin;
+
+        if (plugin != null)
+        {
+            RbButtonHelper.AddButton(plugin);
+        }
+
         Log.Information($"{PluginName} Enabled");
     }
 
     public override void OnDisabled()
     {
-        TreeRoot.OnStart -= OnBotStart;
-        TreeRoot.OnStop -= OnBotStop;
+        var plugin = PluginManager.Plugins.FirstOrDefault(x => x.Plugin.Name == NameValue)?.Plugin;
+
+        if (plugin != null)
+        {
+            RbButtonHelper.RemoveButton(plugin);
+        }
+
         Log.Information($"{PluginName} Disabled");
     }
 
@@ -79,8 +89,6 @@ public class BasePlugin : TemplatePlugin, ICompiledPlugin
     {
 
         Log.Information($"Initializing {NameValue}");
-        Log.Information("Backing up data");
-        DoBackup();
 
     }
 
@@ -93,9 +101,9 @@ public class BasePlugin : TemplatePlugin, ICompiledPlugin
         base.OnBotStop(bot);
     }
 
-    private void DoBackup()
+    private static void DoBackup()
     {
-        var configFolder = Clio.Utilities.Utilities.AssemblyDirectory;
+        var configFolder = Path.Combine(ff14bot.Helpers.Utils.AssemblyDirectory, "Plugins", "CharacterSync");
 
         if (!Directory.Exists(configFolder))
         {
@@ -142,16 +150,23 @@ public class BasePlugin : TemplatePlugin, ICompiledPlugin
     internal static async Task<bool> PluginTask()
     {
 
+        //Log.Information("Backing up data");
+        //DoBackup();
+
         var filepath = (Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                                                                                  "My Games",
-                                                                                 "FINAL FANTASY XIV - A Realm Reborn"));
+                                                                                 "FINAL FANTASY XIV - A Realm Reborn", $"FFXIV_CHR{LlamaLibrary.Extensions.LocalPlayerExtensions.PlayerId(Core.Player):X16}"));
         try
         {
             Log.Information("Trying to find directory");
             if (LlamaLibrary.Extensions.LocalPlayerExtensions.PlayerId(Core.Player) != 0)
             {
-                var match = SaveFolderRegex.Match(filepath);
-                Log.Information($"Looking for match for {filepath}");
+                var match = SaveFolderRegex.Match($"{filepath}");
+                Log.Information($"Looking for match Value {match.Value}");
+                Log.Information($"Looking for match Name {match.Name}");
+                Log.Information($"Looking for match Groups {match.Groups}");
+                Log.Information($"Looking for match Captures {match.Captures}");
+                Log.Information($"Looking for match Length {match.Length}");
                 if (match.Success)
                 {
                     Log.Information("Match success");

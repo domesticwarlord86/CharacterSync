@@ -13,7 +13,7 @@ namespace CharacterSync;
 public partial class Form1 : Form
 {
     public static bool loading;
-    private static readonly LLogger Log = new("Settings", Colors.MediumSeaGreen);
+    private static readonly LLogger Log = new(CharacterSync.BasePlugin.NameValue, Colors.Cyan);
 
     public Form1()
     {
