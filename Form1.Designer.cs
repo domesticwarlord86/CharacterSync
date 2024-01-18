@@ -38,12 +38,13 @@
             // 
             this.propertyGrid1.Location = new System.Drawing.Point(12, 12);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(247, 249);
+            this.propertyGrid1.Size = new System.Drawing.Size(311, 249);
             this.propertyGrid1.TabIndex = 0;
+            this.propertyGrid1.Click += new System.EventHandler(this.propertyGrid1_Click);
             // 
             // copyButton
             // 
-            this.copyButton.Location = new System.Drawing.Point(131, 276);
+            this.copyButton.Location = new System.Drawing.Point(107, 276);
             this.copyButton.Name = "copyButton";
             this.copyButton.Size = new System.Drawing.Size(128, 23);
             this.copyButton.TabIndex = 1;
@@ -56,7 +57,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkGray;
-            this.ClientSize = new System.Drawing.Size(271, 311);
+            this.ClientSize = new System.Drawing.Size(335, 311);
             this.Controls.Add(this.copyButton);
             this.Controls.Add(this.propertyGrid1);
             this.Name = "Form1";

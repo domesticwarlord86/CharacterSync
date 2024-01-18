@@ -23,14 +23,10 @@ public partial class Form1 : Form
 
     private void Form1_Load(object sender, EventArgs e)
     {
-
+        propertyGrid1.SelectedObject = Settings.CharacterSync.Instance;
+        propertyGrid1.Update();
 
         loading = false;
-    }
-
-    private async void StartButton_Click(object sender, EventArgs e)
-    {
-        await BasePlugin.PluginTask();
     }
 
     public static void BindField(Control control, string propertyName, object dataSource, string dataMember)
@@ -65,4 +61,8 @@ public partial class Form1 : Form
         await CharacterSync.BasePlugin.PluginTask();
     }
 
+    private void propertyGrid1_Click(object sender, EventArgs e)
+    {
+        propertyGrid1.SelectedObject = Settings.CharacterSync.Instance;
+    }
 }

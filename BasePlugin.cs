@@ -147,11 +147,14 @@ public class BasePlugin : TemplatePlugin, ICompiledPlugin
                                                                                  "FINAL FANTASY XIV - A Realm Reborn"));
         try
         {
+            Log.Information("Trying to find directory");
             if (LlamaLibrary.Extensions.LocalPlayerExtensions.PlayerId(Core.Player) != 0)
             {
                 var match = SaveFolderRegex.Match(filepath);
+                Log.Information($"Looking for match for {filepath}");
                 if (match.Success)
                 {
+                    Log.Information("Match success");
                     var rootPath = match.Groups["path"].Value;
                     var datName = match.Groups["dat"].Value;
 
@@ -164,6 +167,10 @@ public class BasePlugin : TemplatePlugin, ICompiledPlugin
                         filepath = $"{rootPath}FFXIV_CHR{LlamaLibrary.Extensions.LocalPlayerExtensions.PlayerId(Core.Player):X16}/{datName}";
                         Log.Information("REWRITE: " + filepath);
                     }
+                }
+                else
+                {
+                    Log.Error("No match found");
                 }
             }
         }
